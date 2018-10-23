@@ -1,0 +1,142 @@
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.0/vue.js"></script>
+
+    <style>
+        #app {
+            color: rgb(14, 11, 211);
+            font-weight: 100;
+            background-color: rgba(170, 193, 196, 0.404);
+        }
+        span, option, input{
+            font-size: 20px;
+        }
+
+        .Table{
+            display: table;
+            width:80%;
+         }
+         .Title{
+            display: table-caption;
+            text-align: center;
+            font-weight: bold;
+            font-size: larger;
+         }
+         .Heading{
+            display: table-row;
+            font-weight: bold;
+            text-align: center;
+         }
+         .Row{
+            display: table-row;
+         }
+         .Cell{
+            display: table-cell;
+            border: solid;
+            border-width: thin;
+            padding-left: 5px;
+            padding-right: 5px;
+            width:30%;
+         }
+    </style>
+</head>
+
+
+
+<body>
+    <div id="app">
+        <h1>Customer details</h1>
+
+        <span>First name: </span>
+        <input type="text" placeholder=" input first name " v-model="fname">
+
+        <span>Last name:</span>
+        <input type="text" placeholder="input last name" v-model="lname">
+
+        <span>Address:</span>
+        <input type="text" placeholder="input address" v-model="addr">
+
+        <button @click = "showdata" :style = "styleobj">Add</button>
+
+        <!-- v-bind:style, v-bind:item v.v. co the bo v-bind di, voi cac even nhu v-on:click co the viet gon thanh @click -->
+        <customercomponent
+            v-for = "(item, index) in custdet"
+            :item = "item"
+            :index = "index"
+            :itr = "item"
+            :key = "item.fname"
+            @removeelement = "custdet.splice(index,1)"></customercomponent>
+    </div>
+
+
+    <script type="text/javascript">
+        var tmp =  '<div class = "Table">'
+                + '<div class = "Row" :style = "styleobj">'
+                    + '<div class = "Cell">'
+                        + '<p> {{itr.fname}}</p>'
+                    +'</div>'
+                    + '<div class = "Cell">'
+                        +'<p> {{itr.lname}} </p>'
+                    +'</div>'
+                    + '<div class = "Cell">'
+                        +'<p> {{itr.addr}}</p>'
+                    +'</div>'
+                    + '<div class = "Cell">'
+                        +'<p><button @click = "$emit(\'removeelement\')">X</button>></p>'
+                    +'</div>'
+                + '</div>'
+            + '</div>';
+
+        Vue.component('customercomponent', {
+            template: tmp,
+            props:['itr', 'index'],
+            data: function(){
+                return {
+                    styleobj:{
+                        backgroundColor: this.getcolor(),
+                        fontSize: 20
+                    }
+                }
+            },
+            methods:{
+                getcolor: function(){
+                    return (this.index % 2) ? "yellow" : "rgba(176, 206, 194, 0.897)";
+                }
+            }
+        });
+
+        var vm  = new Vue({
+            el:'#app',
+            data:{
+                fname:'',
+                lname:'',
+                addr:'',
+                custdet:[],
+                styleobj:{
+                    backgroundColor: 'red',
+                    cursor: 'pointer',
+                    padding: '8px 16px',
+                    verticalAlign: 'middle',
+                }
+            },
+            methods:{
+                showdata: function(){
+                    this.custdet.push({
+                        fname: this.fname,
+                        lname: this.lname,
+                        addr: this.addr
+                    });
+
+                    this.fname = "";
+                    this.lname = "";
+                    this.addr = "";
+                }
+            }
+        });        
+
+    </script>
+
+</body>
+
+</html>
